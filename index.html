@@ -15,10 +15,8 @@
       justify-content: center;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* ===== Phone Frame ===== */
     .phone {
       width: 390px;
       max-width: 100%;
@@ -27,23 +25,12 @@
       position: relative;
     }
 
-    /* ===== Status Bar ===== */
-    .status-bar {
-      display: flex;
-      justify-content: space-between;
-      padding: 14px 20px 6px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #1c1c1e;
-      background: #f8f9fc;
-    }
-
     /* ===== Navigation ===== */
     .nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 4px 16px 10px;
+      padding: 12px 16px 10px;
       background: #f8f9fc;
     }
     .nav-back {
@@ -84,17 +71,13 @@
       padding: 0 16px 100px;
     }
 
-    /* ===== Card Base ===== */
+    /* ===== Card ===== */
     .card {
       background: #ffffff;
       border-radius: 16px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.04), 0 1px 4px rgba(0,0,0,0.02);
       padding: 20px;
       margin-bottom: 14px;
-      transition: box-shadow 0.2s;
-    }
-    .card:active {
-      box-shadow: 0 1px 6px rgba(0,0,0,0.03);
     }
 
     .section-label {
@@ -106,7 +89,7 @@
       padding-left: 2px;
     }
 
-    /* ===== Customer Header Card ===== */
+    /* ===== Customer ===== */
     .customer-top {
       display: flex;
       align-items: center;
@@ -131,7 +114,6 @@
     .tag-hot {
       background: #ff3b30;
       color: #fff;
-      box-shadow: 0 2px 8px rgba(255,59,48,0.2);
     }
 
     .customer-grid {
@@ -143,7 +125,7 @@
       line-height: 1.9;
     }
 
-    /* ===== Intent Car (highlight block) ===== */
+    /* ===== Intent ===== */
     .intent-block {
       margin-top: 16px;
       padding: 14px 16px;
@@ -196,15 +178,16 @@
       color: #8e8e93;
     }
 
-    /* Tabs */
+    /* ===== Tabs - evenly split 1/3 each ===== */
     .tab-bar {
       display: flex;
-      gap: 16px;
-      padding: 14px 20px 0;
+      padding: 14px 0 0;
+      margin: 0 20px;
       border-bottom: 1px solid #e8e8ed;
-      margin-bottom: 0;
     }
     .tab-btn {
+      flex: 1;
+      text-align: center;
       padding: 0 0 10px;
       font-size: 14px;
       font-weight: 500;
@@ -212,7 +195,6 @@
       cursor: pointer;
       border-bottom: 2px solid transparent;
       transition: all 0.25s ease;
-      position: relative;
       user-select: none;
       background: none;
       font-family: inherit;
@@ -224,7 +206,7 @@
       border-bottom-color: #007aff;
     }
 
-    /* Tab Content */
+    /* ===== Tab Panels ===== */
     .tab-panel { display: none; padding: 4px 20px 6px; }
     .tab-panel.active { display: block; animation: tabIn 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
     @keyframes tabIn {
@@ -232,7 +214,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ===== Content Items ===== */
+    /* ===== Items ===== */
     .rec-item {
       padding: 16px 0;
       border-bottom: 1px solid #f0f0f2;
@@ -271,6 +253,31 @@
     .rec-tag-accent { background: rgba(0,122,255,0.08); color: #007aff; }
     .rec-tag-warm { background: rgba(255,149,0,0.1); color: #c96100; }
 
+    /* 截止时间突出 */
+    .rec-deadline {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #d97d00;
+      background: rgba(255,149,0,0.1);
+      padding: 3px 10px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+    .rec-deadline::before {
+      content: "⏳";
+      font-size: 11px;
+    }
+    .rec-deadline-urgent {
+      color: #ff3b30;
+      background: rgba(255,59,48,0.08);
+    }
+    .rec-deadline-urgent::before {
+      content: "⏰";
+    }
+
     .rec-highlight {
       display: flex;
       align-items: baseline;
@@ -295,7 +302,7 @@
       margin-left: 6px;
     }
 
-    /* Material Items */
+    /* ===== Material Item ===== */
     .material-row {
       display: flex;
       gap: 12px;
@@ -329,7 +336,7 @@
       margin-bottom: 6px;
     }
 
-    /* ===== Action Button ===== */
+    /* ===== Buttons ===== */
     .action-row {
       display: flex;
       justify-content: flex-end;
@@ -370,7 +377,6 @@
       transform: scale(0.96);
       box-shadow: 0 1px 4px rgba(0,122,255,0.2);
     }
-
     .btn-primary.sent {
       background: #e8e8ed;
       color: #aeaeb2;
@@ -378,44 +384,14 @@
       pointer-events: none;
     }
 
-    /* ===== Quick Actions ===== */
-    .quick-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
-    }
-    .quick-btn {
-      text-align: center;
-      padding: 14px 0;
-      background: #ffffff;
-      border-radius: 14px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #1c1c1e;
-      cursor: pointer;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.02);
-      transition: all 0.2s ease;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      border: 1px solid rgba(0,0,0,0.02);
-    }
-    .quick-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-    }
-    .quick-btn:active {
-      transform: scale(0.96);
-    }
-
     /* ===== Timeline ===== */
     .tl-item {
       padding: 14px 0;
       border-bottom: 1px solid #f0f0f2;
-      transition: background 0.15s;
       border-radius: 6px;
       margin: 0 -4px;
       padding: 14px 4px;
-      cursor: default;
+      transition: background 0.15s;
     }
     .tl-item:hover { background: #f8f9fc; }
     .tl-item:last-of-type { border-bottom: none; }
@@ -549,11 +525,7 @@
       padding: 18px 20px 12px;
       border-bottom: 1px solid #f0f0f2;
     }
-    .modal-head h3 {
-      font-size: 17px;
-      font-weight: 600;
-      color: #1c1c1e;
-    }
+    .modal-head h3 { font-size: 17px; font-weight: 600; color: #1c1c1e; }
     .modal-close {
       width: 28px; height: 28px;
       display: flex;
@@ -583,7 +555,6 @@
       justify-content: flex-end;
     }
 
-    /* ===== Pull to refresh hint ===== */
     .pull-hint {
       text-align: center;
       font-size: 11px;
@@ -592,7 +563,6 @@
       letter-spacing: 0.5px;
     }
 
-    /* ===== Responsive ===== */
     @media (max-width: 420px) {
       .phone { width: 100%; }
       .bottom-bar { width: 100%; left: 0; transform: none; }
@@ -603,13 +573,7 @@
 
 <div class="phone">
 
-  <!-- Status -->
-  <div class="status-bar">
-    <span>9:41</span>
-    <span>●●●●○</span>
-  </div>
-
-  <!-- Nav -->
+  <!-- Nav (no status bar) -->
   <div class="nav">
     <div class="nav-back" onclick="toast('已返回线索列表')">返回</div>
     <div class="nav-title">线索详情</div>
@@ -619,7 +583,7 @@
   <!-- Content -->
   <div class="content">
 
-    <!-- ===== Customer ===== -->
+    <!-- ===== Customer Info ===== -->
     <div class="card">
       <div class="customer-top">
         <span class="customer-name">张明</span>
@@ -650,24 +614,25 @@
           <p>政策 · 素材 · 卡券，一键触达客户</p>
         </div>
 
-        <div class="tab-bar" id="tabBar">
+        <!-- Tabs evenly split -->
+        <div class="tab-bar">
           <button class="tab-btn active" onclick="switchTab('policy',this)">政策</button>
           <button class="tab-btn" onclick="switchTab('material',this)">素材</button>
           <button class="tab-btn" onclick="switchTab('coupon',this)">卡券</button>
         </div>
 
-        <!-- Policy -->
+        <!-- Policy Tab -->
         <div class="tab-panel active" id="panel-policy">
           <div class="rec-item" onclick="openPreview('policy1')">
             <div class="rec-title">限时直降优惠</div>
             <div class="rec-desc">领克 08 全系限时优惠，至高立减 5,000 元</div>
+            <div class="rec-deadline">距截止 41 天 · 2026.07.31</div>
             <div class="rec-highlight">
               <span class="big">5,000</span><span class="suffix">元</span>
               <span class="label">+ 金融贴息综合至高 15,000 元</span>
             </div>
             <div class="rec-tags">
               <span class="rec-tag rec-tag-accent">限时</span>
-              <span class="rec-tag">至 2026.07.31</span>
             </div>
             <div class="action-row">
               <button class="btn btn-outline" onclick="event.stopPropagation();openPreview('policy1')">详情</button>
@@ -678,6 +643,7 @@
           <div class="rec-item" onclick="openPreview('policy2')">
             <div class="rec-title">专属金融方案</div>
             <div class="rec-desc">首付低至 20%，36 期 0 利率，月供仅 3,880 元起</div>
+            <div class="rec-deadline">限时申请 · 2026.07.31 截止</div>
             <div class="rec-tags">
               <span class="rec-tag rec-tag-accent">低首付</span>
               <span class="rec-tag rec-tag-accent">0 利率</span>
@@ -691,6 +657,7 @@
           <div class="rec-item" onclick="openPreview('policy3')">
             <div class="rec-title">置换补贴</div>
             <div class="rec-desc">任意品牌旧车置换，享至高 8,000 元补贴</div>
+            <div class="rec-deadline">长期有效</div>
             <div class="rec-highlight">
               <span class="big">8,000</span><span class="suffix">元</span>
               <span class="label">至高补贴 · 不限品牌</span>
@@ -705,7 +672,7 @@
           </div>
         </div>
 
-        <!-- Material -->
+        <!-- Material Tab -->
         <div class="tab-panel" id="panel-material">
           <div class="material-row" onclick="openPreview('mat1')">
             <div class="material-thumb">📷</div>
@@ -744,14 +711,15 @@
           </div>
         </div>
 
-        <!-- Coupon -->
+        <!-- Coupon Tab -->
         <div class="tab-panel" id="panel-coupon">
           <div class="rec-item" onclick="openPreview('coupon1')">
             <div class="rec-title">试驾体验券</div>
             <div class="rec-desc">到店试驾领克 08，即赠品牌定制礼盒</div>
+            <div class="rec-deadline rec-deadline-urgent">即将截止 · 剩 3 天</div>
             <div class="rec-tags">
               <span class="rec-tag rec-tag-accent">可领取</span>
-              <span class="rec-tag">有效期 30 天</span>
+              <span class="rec-tag">领取后 30 天有效</span>
             </div>
             <div class="action-row">
               <button class="btn btn-outline" onclick="event.stopPropagation();openPreview('coupon1')">详情</button>
@@ -762,9 +730,10 @@
           <div class="rec-item" onclick="openPreview('coupon2')">
             <div class="rec-title">购车抵扣券</div>
             <div class="rec-desc">下定立减 2,000 元，可叠加门店优惠</div>
+            <div class="rec-deadline rec-deadline-urgent">限量 500 份 · 仅剩 23 份</div>
             <div class="rec-tags">
               <span class="rec-tag rec-tag-accent">可领取</span>
-              <span class="rec-tag rec-tag-warm">限量 500 份</span>
+              <span class="rec-tag rec-tag-warm">限量</span>
             </div>
             <div class="action-row">
               <button class="btn btn-outline" onclick="event.stopPropagation();openPreview('coupon2')">详情</button>
@@ -775,6 +744,7 @@
           <div class="rec-item" onclick="openPreview('coupon3')">
             <div class="rec-title">专属保养套餐</div>
             <div class="rec-desc">购车即赠 3 年 6 次基础保养 · 价值 4,800 元</div>
+            <div class="rec-deadline">随车赠送 · 长期有效</div>
             <div class="rec-highlight">
               <span class="big">4,800</span><span class="suffix">元</span>
               <span class="label">随车赠送</span>
@@ -788,15 +758,7 @@
       </div>
     </div>
 
-    <!-- ===== Quick Actions ===== -->
-    <div class="section-label">快捷操作</div>
-    <div class="quick-grid">
-      <div class="quick-btn" onclick="toast('跟进模板已加载')">跟进</div>
-      <div class="quick-btn" onclick="toast('试驾邀约已准备')">约试驾</div>
-      <div class="quick-btn" onclick="document.getElementById('smartSection').scrollIntoView({behavior:'smooth'})">推荐</div>
-    </div>
-
-    <!-- ===== Timeline ===== -->
+    <!-- ===== Timeline (no inline quick actions) ===== -->
     <div style="margin-top:20px">
       <div class="section-label">跟进记录</div>
       <div class="card" style="padding:6px 20px">
@@ -866,7 +828,6 @@
 </div>
 
 <script>
-  // ===== Switch Tab =====
   function switchTab(name, btn) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -874,7 +835,6 @@
     document.getElementById('panel-' + name).classList.add('active');
   }
 
-  // ===== Toast =====
   let tTimer = null;
   function toast(msg) {
     const el = document.getElementById('toast');
@@ -884,7 +844,6 @@
     tTimer = setTimeout(() => el.classList.remove('show'), 2000);
   }
 
-  // ===== Send =====
   function sendItem(btn, name) {
     if (btn.classList.contains('sent')) return;
     btn.classList.add('sent');
@@ -896,7 +855,6 @@
     }, 2500);
   }
 
-  // ===== Modal =====
   const previews = {
     policy1: `<h4 style="font-weight:600;margin-bottom:8px">限时直降优惠</h4>
       <p style="font-size:28px;font-weight:700;margin:8px 0 2px;color:#1c1c1e">5,000 元</p>
