@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>线索详情 · 智能营销</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+      background: #f5f7fb;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 12px 0 0 0;
+    }
+
+    /* 手机壳容器 */
+    .phone-frame {
+      width: 390px;
+      max-width: 100%;
+      background: #ffffff;
+      border-radius: 32px 32px 0 0;
+      box-shadow: 0 -4px 30px rgba(0,0,0,0.08);
+      overflow: hidden;
+      position: relative;
+      padding-bottom: 80px;
+    }
+
+    /* 状态栏 */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px 8px;
+      font-size: 12px;
+      color: #1a1a2e;
+      background: #fff;
+    }
+
+    .status-bar .time { font-weight: 600; }
+    .status-icons { display: flex; gap: 6px; }
+
+    /* 导航头 */
+    .nav-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      border-bottom: 1px solid #f0f2f5;
+      background: #fff;
+    }
+
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #4a6cf7;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .nav-back:hover { background: #f0f4ff; }
+    .nav-back svg { width: 20px; height: 20px; }
+
+    .nav-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+      color: #4a6cf7;
+    }
+    .nav-actions svg {
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .nav-actions svg:hover { background: #f0f4ff; }
+
+    /* 可滚动内容区 */
+    .scroll-content {
+      padding: 0 16px 20px;
+      max-height: 700px;
+      overflow-y: auto;
+    }
+    .scroll-content::-webkit-scrollbar { width: 3px; }
+    .scroll-content::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+
+    /* 客户信息卡片 */
+    .customer-card {
+      background: linear-gradient(135deg, #4a6cf7 0%, #6c5ce7 100%);
+      border-radius: 16px;
+      padding: 20px;
+      margin: 12px 0;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .customer-card::before {
+      content: '';
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: 140px;
+      height: 140px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+    .customer-card::after {
+      content: '';
+      position: absolute;
+      right: 10px;
+      bottom: -30px;
+      width: 100px;
+      height: 100px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+
+    .customer-name-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .customer-name {
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .customer-tag {
+      background: rgba(255,255,255,0.2);
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+    }
+    .customer-tag.high {
+      background: #ff6b6b;
+      color: #fff;
+    }
+
+    .customer-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 16px;
+      font-size: 13px;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+    .customer-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* 意向车型高亮 */
+    .intent-car {
+      margin-top: 14px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .intent-car-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .intent-car-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .intent-car-info h4 {
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .intent-car-info p {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+    .intent-badge {
+      background: #ffd43b;
+      color: #1a1a2e;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* 模块标题 */
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 20px 0 12px 0;
+    }
+    .section-title h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a2e;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-title .badge {
+      background: #4a6cf7;
+      color: #fff;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 500;
+    }
+    .section-more {
+      font-size: 13px;
+      color: #4a6cf7;
+      cursor: pointer;
+    }
+
+    /* ===== 智能推荐区域（核心功能） ===== */
+    .smart-recommend {
+      background: #f8faff;
+      border: 1.5px solid #e8eeff;
+      border-radius: 16px;
+      padding: 16px;
+      margin: 4px 0 16px;
+    }
+
+    .smart-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .smart-header .magic-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #4a6cf7, #6c5ce7);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #fff;
+    }
+    .smart-header h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+    .smart-header .sub {
+      font-size: 12px;
+      color: #888;
+      margin-left: auto;
+    }
+
+    /* 推荐 Tab */
+    .rec-tabs {
+      display: flex;
+      gap: 4px;
+      background: #edf2ff;
+      border-radius: 10px;
+      padding: 3px;
+      margin-bottom: 14px;
+    }
+    .rec-tab {
+      flex: 1;
+      text-align: center;
+      padding: 8px 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #666;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      user-select: none;
+    }
+    .rec-tab.active {
+      background: #fff;
+      color: #4a6cf7;
+      box-shadow: 0 2px 8px rgba(74,108,247,0.12);
+    }
+    .rec-tab:hover:not(.active) { color: #4a6cf7; }
+
+    /* Tab 内容区 */
+    .tab-content {
+      display: none;
+      animation: fadeSlideIn 0.3s ease;
+    }
+    .tab-content.active { display: block; }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 推荐条目卡片 */
+    .rec-item {
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      border: 1px solid #f0f2f5;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .rec-item:hover {
+      border-color: #cddaff;
+      box-shadow: 0 4px 16px rgba(74,108,247,0.10);
+    }
+
+    .rec-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .rec-item-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+    }
+    .rec-item-desc {
+      font-size: 12px;
+      color: #888;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .rec-item-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .rec-tag {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: #f0f4ff;
+      color: #4a6cf7;
+    }
+    .rec-tag.green { background: #e8f8ee; color: #2d9d5e; }
+    .rec-tag.orange { background: #fff4e6; color: #e67700; }
+    .rec-tag.red { background: #fff0f0; color: #e03131; }
+
+    .rec-item-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 8px;
+      padding-top: 10px;
+      border-top: 1px solid #f5f5f5;
+    }
+    .btn-preview {
+      font-size: 12px;
+      color: #666;
+      background: #f5f5f5;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-preview:hover { background: #eee; }
+
+    .btn-forward {
+      font-size: 12px;
+      color: #fff;
+      background: linear-gradient(135deg, #4a6cf7, #6c5ce7);
+      border: none;
+      padding: 6px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-forward:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(74,108,247,0.3);
+    }
+    .btn-forward:active { transform: scale(0.96); }
+
+    .btn-forward.sent {
+      background: #d3d9e6;
+      color: #999;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    /* 政策信息特殊样式 */
+    .policy-highlight {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #fff8e6, #fff3cc);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      border: 1px solid #ffecb3;
+    }
+    .policy-highlight .big-num {
+      font-size: 28px;
+      font-weight: 800;
+      color: #e67700;
+    }
+    .policy-highlight .big-num-unit {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e67700;
+    }
+    .policy-highlight p {
+      font-size: 13px;
+      color: #5a4a2a;
+      line-height: 1.4;
+    }
+
+    /* 物料卡片带缩略图 */
+    .material-item .rec-item-top {
+      display: flex;
+      gap: 12px;
+    }
+    .material-thumb {
+      width: 64px;
+      height: 64px;
+      min-width: 64px;
+      border-radius: 8px;
+      background: #f0f4ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #4a6cf7;
+      overflow: hidden;
+    }
+    .material-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .material-info {
+      flex: 1;
+    }
+    .material-info .rec-item-title {
+      font-size: 14px;
+    }
+    .material-info .rec-item-desc {
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+    .material-stats {
+      font-size: 11px;
+      color: #aaa;
+      display: flex;
+      gap: 12px;
+    }
+    .material-stats span { display: flex; align-items: center; gap: 3px; }
+
+    /* ===== 跟进记录 ===== */
+    .timeline {
+      position: relative;
+      padding-left: 20px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 4px;
+      bottom: 4px;
+      width: 2px;
+      background: #e8ecf1;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 0 0 16px 14px;
+    }
+    .timeline-item:last-child { padding-bottom: 0; }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -17px;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4a6cf7;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 2px #cddaff;
+    }
+    .timeline-item .tl-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+    .tl-header .tl-name { font-weight: 600; color: #1a1a2e; }
+    .tl-header .tl-time { color: #999; font-size: 12px; }
+
+    .tl-content {
+      font-size: 13px;
+      color: #444;
+      line-height: 1.6;
+      background: #f8f9fb;
+      padding: 10px 12px;
+      border-radius: 8px;
+    }
+    .tl-content .highlight-link {
+      color: #4a6cf7;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* 快捷操作区 */
+    .quick-actions {
+      display: flex;
+      gap: 10px;
+      margin: 16px 0 4px;
+    }
+    .quick-btn {
+      flex: 1;
+      text-align: center;
+      padding: 12px 0;
+      border-radius: 12px;
+      border: 1.5px dashed #d0d5e0;
+      background: #fafbff;
+      font-size: 13px;
+      color: #555;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .quick-btn:hover {
+      border-color: #4a6cf7;
+      color: #4a6cf7;
+      background: #f0f4ff;
+    }
+    .quick-btn .qb-icon { font-size: 20px; }
+
+    /* ===== 底部操作栏 ===== */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 390px;
+      max-width: 100%;
+      background: #fff;
+      border-top: 1px solid #f0f2f5;
+      padding: 8px 16px 16px;
+      display: flex;
+      gap: 10px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.04);
+      z-index: 100;
+    }
+    .bottom-bar .bb-btn {
+      flex: 1;
+      text-align: center;
+      padding: 10px 0;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .bb-btn.outline {
+      background: #f5f5f5;
+      color: #333;
+      border: 1px solid #e8e8e8;
+    }
+    .bb-btn.outline:hover { background: #eee; }
+
+    .bb-btn.primary {
+      background: linear-gradient(135deg, #4a6cf7, #6c5ce7);
+      color: #fff;
+    }
+    .bb-btn.primary:hover { box-shadow: 0 4px 16px rgba(74,108,247,0.3); }
+
+    .bb-btn.success {
+      background: linear-gradient(135deg, #2d9d5e, #20c997);
+      color: #fff;
+    }
+
+    /* 提示 Toast */
+    .toast {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: rgba(0,0,0,0.75);
+      color: #fff;
+      padding: 16px 28px;
+      border-radius: 12px;
+      font-size: 14px;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s;
+      backdrop-filter: blur(4px);
+      text-align: center;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .toast .toast-icon { font-size: 32px; margin-bottom: 6px; }
+
+    /* 预览弹窗 */
+    .preview-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .preview-modal.show {
+      display: flex;
+    }
+    .preview-card {
+      background: #fff;
+      width: 340px;
+      border-radius: 20px;
+      overflow: hidden;
+      animation: popIn 0.3s ease;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .preview-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid #f0f2f5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .preview-header h4 { font-size: 16px; font-weight: 600; }
+    .preview-close {
+      font-size: 22px;
+      color: #999;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .preview-close:hover { color: #333; }
+    .preview-body {
+      padding: 16px 20px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .preview-footer {
+      padding: 12px 20px 16px;
+      border-top: 1px solid #f0f2f5;
+      display: flex;
+      gap: 8px;
+    }
+    .preview-footer .btn-forward {
+      flex: 1;
+      justify-content: center;
+    }
+
+    /* 转发成功状态计数 */
+    .toast-emoji { font-size: 36px; }
+
+    /* 响应式 */
+    @media (max-width: 420px) {
+      body { padding: 0; }
+      .phone-frame {
+        width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+        padding-bottom: 76px;
+      }
+      .bottom-bar {
+        width: 100%;
+        left: 0;
+        transform: none;
+        border-radius: 0;
+      }
+      .scroll-content { max-height: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="phone-frame">
+
+  <!-- 状态栏 -->
+  <div class="status-bar">
+    <span class="time">9:41</span>
+    <div class="status-icons">
+      <span>📶</span>
+      <span>📶</span>
+      <span>🔋</span>
+    </div>
+  </div>
+
+  <!-- 导航 -->
+  <div class="nav-header">
+    <div class="nav-back" onclick="historyBack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7 7l-7-7 7-7"/></svg>
+      返回
+    </div>
+    <div class="nav-title">线索详情</div>
+    <div class="nav-actions">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+    </div>
+  </div>
+
+  <!-- 滚动内容 -->
+  <div class="scroll-content" id="scrollContent">
+
+    <!-- 客户信息卡片 -->
+    <div class="customer-card">
+      <div class="customer-name-row">
+        <span class="customer-name">张明</span>
+        <span class="customer-tag high">🔥 高意向</span>
+        <span class="customer-tag">2 次跟进</span>
+      </div>
+      <div class="customer-meta">
+        <span>📞 138****5678</span>
+        <span>📍 深圳 · 南山店</span>
+        <span>📅 2026-06-15 创建</span>
+        <span>🔄 最近跟进: 2026-06-19</span>
+      </div>
+
+      <!-- 意向车型高亮 -->
+      <div class="intent-car">
+        <div class="intent-car-left">
+          <div class="intent-car-icon">🚗</div>
+          <div class="intent-car-info">
+            <h4>领克 08 EM-P 245 超长续航Halo</h4>
+            <p>意向颜色: 曜日银 · 购车预算: 20-25万</p>
+          </div>
+        </div>
+        <span class="intent-badge">匹配中</span>
+      </div>
+    </div>
+
+    <!-- ===== 智能推荐区域 ===== -->
+    <div class="smart-recommend" id="smartRec">
+      <div class="smart-header">
+        <div class="magic-icon">✨</div>
+        <h3>智能推荐 · 领克 08</h3>
+        <span class="sub">基于意向车型匹配</span>
+      </div>
+
+      <!-- Tabs -->
+      <div class="rec-tabs">
+        <div class="rec-tab active" data-tab="policy" onclick="switchTab(this)">📋 政策</div>
+        <div class="rec-tab" data-tab="material" onclick="switchTab(this)">📎 素材</div>
+        <div class="rec-tab" data-tab="coupon" onclick="switchTab(this)">🎫 卡券</div>
+      </div>
+
+      <!-- 政策 Tab -->
+      <div class="tab-content active" id="tab-policy">
+        <div class="rec-item" onclick="showPreview('policy1')">
+          <div class="rec-item-top">
+            <div>
+              <div class="rec-item-title">🎉 领克 08 限时直降优惠</div>
+              <div class="rec-item-desc">即日起至7月31日，领克08全系享限时直降，至高优惠5,000元</div>
+            </div>
+          </div>
+          <div class="policy-highlight">
+            <div><span class="big-num">5,000</span><span class="big-num-unit">元</span></div>
+            <p>限时直降 + 金融贴息方案叠加，综合优惠至高 15,000 元</p>
+          </div>
+          <div class="rec-item-tags">
+            <span class="rec-tag">🔥 限时</span>
+            <span class="rec-tag green">📅 至7/31</span>
+          </div>
+          <div class="rec-item-actions">
+            <button class="btn-preview" onclick="event.stopPropagation();showPreview('policy1')">👁 预览</button>
+            <button class="btn-forward" onclick="event.stopPropagation();handleForward(this, '限时直降优惠')">📤 转发给客户</button>
+          </div>
+        </div>
+
+        <div class="rec-item" onclick="showPreview('policy2')">
+          <div class="rec-item-top">
+            <div>
+              <div class="rec-item-title">🏦 领克 08 专属金融方案</div>
+              <div class="rec-item-desc">首付低至 20%，享 36 期 0 利率，月供仅 3,880 元起</div>
+            </div>
+          </div>
+          <div class="rec-item-tags">
+            <span class="rec-tag orange">💰 低首付</span>
+            <span class="rec-tag green">✅ 0 利率</span>
+          </div>
+          <div class="rec-item-actions">
+            <button class="btn-preview" onclick="event.stopPropagation();showPreview('policy2')">👁 预览</button>
+            <button class="btn-forward" onclick="event.stopPropagation();handleForward(this, '专属金融方案')">📤 转发给客户</button>
+          </div>
+        </div>
+
+        <div class="rec-item" onclick="showPreview('policy3')">
+          <div class="rec-item-top">
+            <div>
+              <div class="rec-item-title">🔄 置换补贴政策</div>
+              <div class="rec-item-desc">旧车置换领克 08，享至高 8,000 元置换补贴</div>
+            </div>
+          </div>
+          <div class="rec-item-tags">
+            <span class="rec-tag">🔄 置换</span>
+            <span class="rec-tag orange">最高 8,000</span>
+          </div>
+          <div class="rec-item-actions">
+            <button class="btn-preview" onclick="event.stopPropagation();showPreview('policy3')">👁 预览</button>
+            <button class="btn-forward" onclick="event.stopPropagation();handleForward(this, '置换补贴政策')">📤 转发给客户</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 素材 Tab -->
+      <div class="tab-content" id="tab-material">
+        <div class="rec-item material-item" onclick="showPreview('mat1')">
+          <div class="rec-item-top">
+            <div class="material-thumb">📸</div>
+            <div class="material-info">
+              <div class="rec-item-title">领克 08 全景实拍 · 外观内饰</div>
+              <div class="rec-item-desc">高清大图 12 张，含外观 8 张 + 内饰 4 张</div>
+              <div class="material-stats">
+                <span>👁 2,341 次查看</span>
+                <span>📤 转发 189 次</span>
+              </div>
+            </div>
+          </div>
+          <div class="rec-item-tags">
+            <span class="rec-tag green">📷 实拍</span>
+            <span class="rec-tag">🔥 热门</span>
+          </div>
+          <div class="rec-item-actions">
+            <button class="btn-preview" onclick="event.stopPropagation();showPreview('mat1')">👁 预览</button>
+            <button class="btn-forward" onclick="event.stopPropagation();handleForward(this, '全景实拍素材')">📤 转发给客户</button>
+          </div>
+        </div>
+
+        <div class="rec-item material-item" onclick="showPreview('mat2')">
+          <div class="rec-item-top">
+            <div class="material-thumb">🎬</div>
+            <div class="material-info">
+              <div class="rec-item-title">领克 08 功能讲解视频</div>
+              <div class="rec-item-desc">3分钟快速了解领克08核心卖点：EM-P 混动、哈曼卡顿、NOA</div>
+              <div class="material-stats">
+                <span>👁 5,678 次播放</span>
+                <span>📤 转发 521 次</span>
+              </div>
+            </div>
+          </div>
+          <div class="rec-item-tags">
+            <span class="rec-tag">🎥 视频</span>
+            <span class="rec-tag green">🔥 爆款</span>
+          </div>
+          <div class="rec-item-actions">
+            <button class="btn-preview" onclick="event.stopPropagation();showPreview('mat2')">👁 预览</button>
+            <button class="btn-forward" onclick="event.stopPropagation();handleForward(this, '功能讲解视频')">📤 转发给客户</button>
+          </div>
+        </div>
+
+        <div class="rec-item material-item" onclick="showPreview('mat3')">
+          <div class="rec-item-top">
+            <div class="material-thumb">📄</div>
+            <div class="material-info">
+              <div class="rec-item-title">领克 08 vs 竞品对比图</div>
+              <div class="rec-item-desc">领克 08 对比理想 L6、问界 M7 核心参数一图看懂</div>
+              <div class="material-stats">
+                <span>👁 3,210 次查看</span>
+                <span>📤 转发 412 次</span>
+              </div>
+            </div>
+          </div>
+          <div class="rec-item-tags">
+            <span class="rec-tag">📊 对比</span>
+            <span class="rec-tag orange">转化利器</span>
+          </div>
+          <div class="rec-item-actions">
+            <button class="btn-preview" onclick="event.stopPropagation();showPreview('mat3')">👁 预览</button>
+            <button class="btn-forward" onclick="event.stopPropagation();handleForward(this, '竞品对比图')">📤 转发给客户</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 卡券 Tab -->
+      <div class="tab-content" id="tab-coupon">
+        <div class="rec-item" onclick="showPreview('coupon1')">
+          <div class="rec-item-top">
+            <div>
+              <div class="rec-item-title">🎟️ 领克 08 试驾体验券</div>
+              <div class="rec-item-desc">到店试驾领克 08，即赠品牌定制礼盒 + 试驾专属优惠</div>
+            </div>
+          </div>
+          <div class="rec-item-tags">
+            <span class="rec-tag green">✅ 可领取</span>
+            <span class="rec-tag">有效期: 30天</span>
+          </div>
+          <div class="rec-item-actions">
+            <button class="btn-preview" onclick="event.stopPropagation();showPreview('coupon1')">👁 预览</button>
+            <button class="btn-forward" onclick="event.stopPropagation();handleForward(this, '试驾体验券')">🎁 赠送客户</button>
+          </div>
+        </div>
+
+        <div class="rec-item" onclick="showPreview('coupon2')">
+          <div class="rec-item-top">
+            <div>
+              <div class="rec-item-title">💰 领克 08 购车抵扣券</div>
+              <div class="rec-item-desc">下定领克 08 立减 2,000 元，可叠加门店优惠使用</div>
+            </div>
+          </div>
+          <div class="rec-item-tags">
+            <span class="rec-tag green">✅ 可领取</span>
+            <span class="rec-tag red">限量 500 份</span>
+          </div>
+          <div class="rec-item-actions">
+            <button class="btn-preview" onclick="event.stopPropagation();showPreview('coupon2')">👁 预览</button>
+            <button class="btn-forward" onclick="event.stopPropagation();handleForward(this, '购车抵扣券')">🎁 赠送客户</button>
+          </div>
+        </div>
+
+        <div class="rec-item" onclick="showPreview('coupon3')">
+          <div class="rec-item-top">
+            <div>
+              <div class="rec-item-title">🔧 领克 08 专属保养套餐</div>
+              <div class="rec-item-desc">购车即赠 3 年 6 次基础保养，价值 4,800 元</div>
+            </div>
+          </div>
+          <div class="rec-item-tags">
+            <span class="rec-tag green">✅ 随车赠送</span>
+            <span class="rec-tag orange">价值 4,800</span>
+          </div>
+          <div class="rec-item-actions">
+            <button class="btn-preview" onclick="event.stopPropagation();showPreview('coupon3')">👁 预览</button>
+            <button class="btn-forward" onclick="event.stopPropagation();handleForward(this, '保养套餐')">🎁 赠送客户</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 快捷操作 -->
+    <div class="quick-actions">
+      <div class="quick-btn" onclick="showToast('💬', '快速跟进模板已加载')">
+        <span class="qb-icon">💬</span>
+        <span>快速跟进</span>
+      </div>
+      <div class="quick-btn" onclick="showToast('📅', '试驾邀约模板已加载')">
+        <span class="qb-icon">📅</span>
+        <span>约试驾</span>
+      </div>
+      <div class="quick-btn" onclick="document.getElementById('smartRec').scrollIntoView({behavior:'smooth'})">
+        <span class="qb-icon">✨</span>
+        <span>智能推荐</span>
+      </div>
+    </div>
+
+    <!-- 跟进记录 -->
+    <div class="section-title">
+      <h3>📋 跟进记录</h3>
+      <span class="section-more">查看全部 →</span>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="tl-header">
+          <span class="tl-name">👤 李明 · 销售顾问</span>
+          <span class="tl-time">昨天 14:32</span>
+        </div>
+        <div class="tl-content">
+          电话沟通：客户表示对领克 08 很感兴趣，已了解外观和基本配置。<br>
+          客户询问了 EM-P 混动的续航表现和充电便利性。<br>
+          <span class="highlight-link" onclick="showToast('📎', '已跳转关联跟进模板')">📎 已发送领克08产品手册</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="tl-header">
+          <span class="tl-name">👤 李明 · 销售顾问</span>
+          <span class="tl-time">3天前 10:15</span>
+        </div>
+        <div class="tl-content">
+          微信跟进：客户主动咨询领克 08 是否有现车，以及目前有什么优惠活动。<br>
+          客户目前对比领克 08 和理想 L6，对价格比较敏感。<br>
+          <span class="highlight-link" onclick="showToast('📎', '已跳转关联跟进模板')">📎 已发送优惠活动海报</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="tl-header">
+          <span class="tl-name">👤 李明 · 销售顾问</span>
+          <span class="tl-time">5天前 16:50</span>
+        </div>
+        <div class="tl-content">
+          首次来电：客户在官网留资，意向车型为领克 08，希望了解价格和配置。<br>
+          已初步介绍领克08的定位和核心卖点，客户表示会到店看车。
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部占位 -->
+    <div style="height: 20px"></div>
+  </div>
+</div>
+
+<!-- 底部操作栏 -->
+<div class="bottom-bar">
+  <button class="bb-btn outline" onclick="showToast('📞', '正在呼叫客户 138****5678')">
+    📞 呼叫
+  </button>
+  <button class="bb-btn outline" onclick="showToast('💬', '已跳转至微信客服')">
+    💬 微信
+  </button>
+  <button class="bb-btn primary" onclick="showToast('📝', '跟进记录编辑中...')">
+    📝 写跟进
+  </button>
+  <button class="bb-btn success" onclick="document.getElementById('smartRec').scrollIntoView({behavior:'smooth'});setTimeout(()=>{document.querySelector('.rec-tab:not(.active)')?.click()},300)">
+    ✨ 智能推荐
+  </button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="toast-emoji" id="toastEmoji">✅</div>
+  <div id="toastMsg">已转发给客户</div>
+</div>
+
+<!-- 预览弹窗 -->
+<div class="preview-modal" id="previewModal">
+  <div class="preview-card">
+    <div class="preview-header">
+      <h4 id="previewTitle">内容预览</h4>
+      <span class="preview-close" onclick="closePreview()">✕</span>
+    </div>
+    <div class="preview-body" id="previewBody">
+      <p style="color:#666;line-height:1.8">加载中...</p>
+    </div>
+    <div class="preview-footer">
+      <button class="btn-forward" id="previewForwardBtn" onclick="handleForwardFromPreview()">📤 转发给客户</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== 预览数据 =====
+  const previewData = {
+    policy1: {
+      title: '领克 08 限时直降优惠',
+      body: `
+        <div style="text-align:center;margin-bottom:16px;font-size:40px">🎉</div>
+        <h3 style="text-align:center;margin-bottom:8px;font-size:18px">领克 08 限时直降优惠</h3>
+        <p style="text-align:center;color:#e67700;font-size:32px;font-weight:800">5,000 元</p>
+        <p style="text-align:center;color:#888;font-size:14px;margin-bottom:16px">限时直降 + 金融贴息叠加</p>
+        <div style="background:#f8f9fb;padding:12px;border-radius:10px;font-size:13px;line-height:1.8">
+          <p>📅 活动时间：即日起 - 2026年7月31日</p>
+          <p>🎯 适用车型：领克 08 全系</p>
+          <p>💰 金融方案：享 36 期 0 利率</p>
+          <p>🔄 置换补贴：至高 8,000 元</p>
+          <p style="color:#4a6cf7;margin-top:8px">* 最终解释权归领克汽车所有</p>
+        </div>
+      `
+    },
+    policy2: {
+      title: '领克 08 专属金融方案',
+      body: `
+        <div style="text-align:center;margin-bottom:16px;font-size:40px">🏦</div>
+        <h3 style="text-align:center;margin-bottom:8px;font-size:18px">领克 08 专属金融方案</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0">
+          <div style="background:#f0f4ff;padding:12px;border-radius:10px;text-align:center">
+            <p style="font-size:12px;color:#888">首付比例</p>
+            <p style="font-size:22px;font-weight:700;color:#4a6cf7">20%</p>
+          </div>
+          <div style="background:#f0f4ff;padding:12px;border-radius:10px;text-align:center">
+            <p style="font-size:12px;color:#888">期数</p>
+            <p style="font-size:22px;font-weight:700;color:#4a6cf7">36 期</p>
+          </div>
+          <div style="background:#f0f4ff;padding:12px;border-radius:10px;text-align:center">
+            <p style="font-size:12px;color:#888">利率</p>
+            <p style="font-size:22px;font-weight:700;color:#2d9d5e">0%</p>
+          </div>
+          <div style="background:#f0f4ff;padding:12px;border-radius:10px;text-align:center">
+            <p style="font-size:12px;color:#888">月供起</p>
+            <p style="font-size:22px;font-weight:700;color:#4a6cf7">3,880</p>
+          </div>
+        </div>
+        <p style="font-size:13px;color:#666;line-height:1.8">超低首付，0 利率轻松贷，让您提前开启领克 08 的出行生活。</p>
+      `
+    },
+    policy3: {
+      title: '置换补贴政策',
+      body: `
+        <div style="text-align:center;margin-bottom:16px;font-size:40px">🔄</div>
+        <h3 style="text-align:center;margin-bottom:8px;font-size:18px">置换补贴政策</h3>
+        <p style="text-align:center;color:#e67700;font-size:32px;font-weight:800">8,000 元</p>
+        <p style="text-align:center;color:#888;font-size:14px;margin-bottom:16px">至高置换补贴</p>
+        <div style="background:#f8f9fb;padding:12px;border-radius:10px;font-size:13px;line-height:1.8">
+          <p>✅ 任何品牌旧车均可参与置换</p>
+          <p>✅ 不限车型、不限车龄</p>
+          <p>✅ 置换补贴可与限时直降叠加</p>
+          <p>✅ 免费评估，当天出价</p>
+        </div>
+      `
+    },
+    mat1: {
+      title: '领克 08 全景实拍',
+      body: `
+        <div style="text-align:center;margin-bottom:16px;font-size:40px">📸</div>
+        <h3 style="margin-bottom:12px;font-size:18px">领克 08 全景实拍 · 外观内饰</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+          <div style="background:#f0f4ff;height:80px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px">🚙</div>
+          <div style="background:#f0f4ff;height:80px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px">🚗</div>
+          <div style="background:#f0f4ff;height:80px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px">🪑</div>
+          <div style="background:#f0f4ff;height:80px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px">🎛️</div>
+        </div>
+        <p style="font-size:13px;color:#888">共 12 张高清大图 · 点击查看全部</p>
+      `
+    },
+    mat2: {
+      title: '领克 08 功能讲解视频',
+      body: `
+        <div style="text-align:center;margin-bottom:16px;font-size:40px">🎬</div>
+        <h3 style="margin-bottom:12px;font-size:18px">领克 08 功能讲解视频</h3>
+        <div style="background:#1a1a2e;border-radius:10px;padding:40px 20px;text-align:center;margin-bottom:12px">
+          <span style="font-size:48px">▶️</span>
+          <p style="color:#fff;margin-top:8px;font-size:13px">点击播放 · 3分钟了解领克08</p>
+        </div>
+        <p style="font-size:13px;color:#888">涵盖：EM-P 混动技术、哈曼卡顿音响、NOA 智驾辅助</p>
+      `
+    },
+    mat3: {
+      title: '领克 08 vs 竞品对比',
+      body: `
+        <div style="text-align:center;margin-bottom:16px;font-size:40px">📊</div>
+        <h3 style="margin-bottom:12px;font-size:18px">领克 08 vs 竞品一图看懂</h3>
+        <div style="background:#f8f9fb;padding:12px;border-radius:10px;font-size:13px;line-height:2">
+          <p style="font-weight:600">核心参数对比：</p>
+          <p>🚗 领克 08：EM-P 混动 · 245km 纯电续航 · 4.6s 零百</p>
+          <p>🚗 理想 L6：增程 · 212km 纯电 · 5.4s 零百</p>
+          <p>🚗 问界 M7：增程 · 200km 纯电 · 4.8s 零百</p>
+          <p style="color:#4a6cf7;margin-top:8px">点击查看完整对比图 →</p>
+        </div>
+      `
+    },
+    coupon1: {
+      title: '试驾体验券',
+      body: `
+        <div style="text-align:center;margin-bottom:16px">🎟️<p style="font-size:40px;margin-top:8px">领克 08 试驾体验券</p></div>
+        <div style="background:linear-gradient(135deg,#4a6cf7,#6c5ce7);border-radius:14px;padding:20px;color:#fff;text-align:center;margin-bottom:14px">
+          <p style="font-size:14px;opacity:0.9">到店试驾 · 赠品牌定制礼盒</p>
+          <p style="font-size:12px;opacity:0.7;margin-top:6px">有效期：领取后 30 天内有效</p>
+        </div>
+        <p style="font-size:13px;color:#666;line-height:1.8">凭此券到店试驾领克 08，即可领取品牌定制礼盒一份，更有专属试驾优惠等你来享！</p>
+      `
+    },
+    coupon2: {
+      title: '购车抵扣券',
+      body: `
+        <div style="text-align:center;margin-bottom:16px">💰<p style="font-size:40px;margin-top:8px">购车抵扣券</p></div>
+        <div style="background:linear-gradient(135deg,#e67700,#ff922b);border-radius:14px;padding:20px;color:#fff;text-align:center;margin-bottom:14px">
+          <p style="font-size:32px;font-weight:800">2,000 元</p>
+          <p style="font-size:14px;opacity:0.9">下定领克 08 立减</p>
+          <p style="font-size:12px;opacity:0.7;margin-top:6px">限量 500 份 · 先到先得</p>
+        </div>
+        <p style="font-size:13px;color:#666;line-height:1.8">可叠加门店现有优惠使用，专属福利不容错过！</p>
+      `
+    },
+    coupon3: {
+      title: '专属保养套餐',
+      body: `
+        <div style="text-align:center;margin-bottom:16px">🔧<p style="font-size:40px;margin-top:8px">专属保养套餐</p></div>
+        <div style="background:linear-gradient(135deg,#2d9d5e,#20c997);border-radius:14px;padding:20px;color:#fff;text-align:center;margin-bottom:14px">
+          <p style="font-size:32px;font-weight:800">3 年 6 次</p>
+          <p style="font-size:14px;opacity:0.9">基础保养 · 价值 4,800 元</p>
+        </div>
+        <p style="font-size:13px;color:#666;line-height:1.8">购车即赠 3 年 6 次基础保养，涵盖机油机滤更换及全车检查，用车无忧。</p>
+      `
+    }
+  };
+
+  // ===== 当前预览 key =====
+  let currentPreviewKey = '';
+
+  // ===== Tab 切换 =====
+  function switchTab(el) {
+    document.querySelectorAll('.rec-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('tab-' + el.dataset.tab).classList.add('active');
+  }
+
+  // ===== 转发 =====
+  function handleForward(btn, name) {
+    if (btn.classList.contains('sent')) return;
+    btn.classList.add('sent');
+    btn.innerHTML = '✅ 已发送';
+    showToast('📤', `「${name}」已成功转发给客户`);
+    // 3秒后重置
+    setTimeout(() => {
+      btn.classList.remove('sent');
+      btn.innerHTML = '📤 转发给客户';
+    }, 3000);
+  }
+
+  // ===== Toast =====
+  let toastTimer = null;
+  function showToast(emoji, msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastEmoji').textContent = emoji;
+    document.getElementById('toastMsg').textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+
+  // ===== 预览弹窗 =====
+  function showPreview(key) {
+    const data = previewData[key];
+    if (!data) return;
+    currentPreviewKey = key;
+    document.getElementById('previewTitle').textContent = data.title;
+    document.getElementById('previewBody').innerHTML = data.body;
+    document.getElementById('previewModal').classList.add('show');
+    document.getElementById('previewForwardBtn').onclick = function() {
+      handleForwardFromPreview();
+    };
+  }
+
+  function closePreview() {
+    document.getElementById('previewModal').classList.remove('show');
+  }
+
+  function handleForwardFromPreview() {
+    const title = document.getElementById('previewTitle').textContent;
+    showToast('📤', `「${title}」已成功转发给客户`);
+    // 更新对应的按钮状态
+    document.querySelectorAll('.btn-forward').forEach(btn => {
+      if (btn.classList.contains('sent')) return;
+      // 简单策略：随便找一个匹配的未发送按钮标记为已发送
+      if (!btn.classList.contains('sent')) {
+        btn.classList.add('sent');
+        btn.innerHTML = '✅ 已发送';
+        setTimeout(() => {
+          btn.classList.remove('sent');
+          btn.innerHTML = '📤 转发给客户';
+        }, 3000);
+        return false;
+      }
+    });
+    closePreview();
+  }
+
+  // 点击弹窗外部关闭
+  document.getElementById('previewModal').addEventListener('click', function(e) {
+    if (e.target === this) closePreview();
+  });
+
+  // 返回按钮
+  function historyBack() {
+    showToast('👋', '已返回线索列表');
+  }
+
+  // 阻止推荐卡片点击到预览的冒泡冲突
+  console.log('✅ 详情页智能营销原型已加载');
+</script>
+
+</body>
+</html>
